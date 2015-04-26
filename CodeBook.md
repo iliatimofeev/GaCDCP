@@ -5,17 +5,16 @@ data source  "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI
 downloaded and unziped in to current directory  
 
 ## Data transformation 
-From data sets extracted only mean() and std() features 
-Datasets expanded by corresponding activity and subject
-Both test and train datasets joined  
-
-Then aggregated by  activity , subject using average values 
+1.	From data sets extracted only mean() and std() features 
+2.	Datasets expanded by corresponding activity and subject
+3.	Both test and train datasets joined  
+4.	Then aggregated by activity , subject using average values 
 
 
 ## data  description :	180 obs. of  69 variables:
- * activity.id                : num  corresponding Training labels from  y_train.txt or y_ test.txt 
- * activity                   : chr  from activity_labels.txt added using corresponding activity.id
- * subject                    : int  corresponding 'train/subject_train.txt': Each row identifies the subject who performed the activity for each window sample. 
+ * activity.id                : num  corresponding Training labels from  `y_train.txt` or `y_ test.txt` 
+ * activity                   : chr  from `activity_labels.txt` added using corresponding activity.id
+ * subject                    : int  corresponding `'train/subject_train.txt'`: Each row identifies the subject who performed the activity for each window sample. 
  * tBodyAcc.mean...X          : num  Average values of combined data set by activity and subject 
  * tBodyAcc.mean...Y          : num  ---""----
  * tBodyAcc.mean...Z          : num  ---""----
