@@ -28,48 +28,67 @@ if(!file.exists("UCI HAR Dataset")){
 	}
 	print(unzip("dataset.zip")) 
 }
-#1. Merges the training and the test sets to create one data set.
+
+getpath<-function(dataset,datatype) {
+	file.path (".","UCI HAR Dataset",dataset,paste0(datatype,"_",dataset,".txt"))
+}
+#Uses selected features in data set.
 features <- read.table(file.path (".","UCI HAR Dataset","features.txt"),stringsAsFactors = F)
-X_train<-read.table(file.path (".","UCI HAR Dataset","train","X_train.txt"),col.names=features[,2],colClasses =c("numeric") )
-X_test<-read.table(file.path (".","UCI HAR Dataset","test","X_test.txt"), col.names=features[,2],colClasses =c("numeric"))
-DT<-rbindlist(list(X_train,X_test),use.names=T)
-#str(data)
-
-#2. Extracts only the measurements on the mean and standard deviation 
-
+#the measurements on the mean and standard deviation 
 mean_and_standard <-which(str_detect(features[,2],"\\-mean\\(\\)|\\-std\\(\\)"))
-DT<-DT[,mean_and_standard,with=F]
-#str(DT)
 
-#3. Uses descriptive activity names to name the activities in the data set
+#Uses descriptive activity names to name the activities in the data set
 activity_labels <- fread(file.path (".","UCI HAR Dataset","activity_labels.txt"),stringsAsFactors = F)
 setnames(activity_labels,1:2,c("activity.id","activity"))
+#load train data
 
-Y_train<-fread(file.path (".","UCI HAR Dataset","train","Y_train.txt"))
+#fread crushes, so we use read.table
+X_train<-data.table(read.table(getpath("train","X"),col.names=features[,2],colClasses =c("numeric") ))
+
+#Extracts only the measurements on the mean and standard deviation 
+X_train<-X_train[,mean_and_standard,with=F]
+
+#Add subject id
+subject_train<-fread(getpath("train","subject"))
+setnames(subject_train,1,c("subject"))
+X_train[,subject:=subject_train$subject]
+
+#Add descriptive activity names 
+Y_train<-fread(getpath("train","Y"))
 setnames(Y_train,1,c("activity.id"))
-setkey(Y_train,activity.id)
+X_train[,activity.id:=Y_train$activity.id]
+setkey(X_train,activity.id)
+X_train[,activity:=X_train[activity_labels,activity,roll=TRUE]]
 
-Y_test<-fread(file.path (".","UCI HAR Dataset","test","Y_test.txt"))
+
+
+#load test data
+X_test<-data.table(read.table(getpath("test","X"), col.names=features[,2],colClasses =c("numeric")))
+
+#Extracts only the measurements on the mean and standard deviation 
+X_test<-X_test[,mean_and_standard,with=F]
+
+#Add descriptive activity names 
+subject_test<-fread(getpath("test","subject"))
+setnames(subject_test,1,c("subject"))
+X_test[,subject:=subject_test$subject]
+
+#Add descriptive activity names 
+Y_test<-fread(getpath("test","Y"))
 setnames(Y_test,1,c("activity.id"))
-setkey(Y_test,activity.id)
+X_test[,activity.id:=Y_test$activity.id]
+setkey(X_test,activity.id)
+X_test[,activity:=X_test[activity_labels,activity,roll=TRUE]]
 
-AL<-rbindlist(list(Y_train[activity_labels,roll=TRUE],Y_test[activity_labels,roll=TRUE]))
-DT[,activity:=AL$activity]
-#print(DT)
+#1. Merges the training and the test sets to create one data set.
+
+DT<-rbindlist(list(X_train,X_test),use.names=T)
+
+
 
 #5. From the data set in step 4, creates a second, independent tidy data set 
 #	with the average of each variable for each activity and each subject.
 #subject_train.txt
-subject_train<-fread(file.path (".","UCI HAR Dataset","train","subject_train.txt"))
-setnames(subject_train,1,c("subject"))
-setkey(subject_train,subject)
-
-subject_test<-fread(file.path (".","UCI HAR Dataset","test","subject_test.txt"))
-setnames(subject_test,1,c("subject"))
-setkey(subject_test,subject)
-
-SL<-rbindlist(list(subject_train,subject_test))
-DT[,subject:=SL$subject]
 tidy_data_set<-DT[,lapply(.SD,mean),.(activity,subject)]
 write.table(tidy_data_set,"tidy_data_set.txt",row.name=FALSE ) 
 #print(tidy_data_set)
