@@ -1,5 +1,5 @@
 # Geting and Cleaning Data Course Project
-
+### my second attempt to get it
 As described in task script is in ['run_analysis.R'](https://github.com/iliatimofeev/GaCDCP/blob/master/run_analysis.R)
 
 Tested on Win7 R 3.1.3 x64
