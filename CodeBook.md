@@ -12,9 +12,45 @@ downloaded and unziped in to current directory
 
 
 ## data  description :	180 obs. of  69 variables:
- * activity.id                : num  corresponding Training labels from  `y_train.txt` or `y_ test.txt` 
- * activity                   : chr  from `activity_labels.txt` added using corresponding activity.id
- * subject                    : int  corresponding `'train/subject_train.txt'`: Each row identifies the subject who performed the activity for each window sample. 
+### Key columns 
+ * ` activity.id		: integer`   corresponding Training labels from  `y_train.txt` or `y_ test.txt` 
+ * ` activity			: string`   from `activity_labels.txt` added using corresponding activity.id
+ * ` subject			: integer`   corresponding `'train/subject_train.txt'`: Each row identifies the subject who performed the activity for each window sample. 
+ 
+#### Value range:
+
+	    activity.id activity
+	    1            WALKING
+	    2   WALKING_UPSTAIRS
+	    3 WALKING_DOWNSTAIRS
+	    4            SITTING
+	    5           STANDING
+	    6             LAYING
+
+		subject: 1:30   
+
+### Observation columns 
+All columns are `numeric` average value of combined data set by activity and subject on corresponding source observation 
+
+#### Naming convention:
+In the name of each of the variables, there is one or more of the following words, whose meaning is described herein.
+
+ * 't': time domain signals
+ * 'f': frequency domain signals (Fast Fourier Transform (FFT) was applied)
+ * 'Acc':accelerometer 3-axial signals
+ * 'Gyro':gyroscope 3-axial signals	
+ * 'Body':body signals
+ * 'Gravity':gravity signals
+ * 'Jerk': Jerk signals (body linear acceleration and angular velocity were derived in time)
+ * 'Mag':Euclidean norm
+ * '.X': signals in the X direction
+ * '.Y': signals in the Y direction
+ * '.Z': signals in the Z direction
+ * 'mean..': mean of the measurement
+ * 'std..': standard deviation of the measurement
+
+#### Columns list :
+
  * tBodyAcc.mean...X          : num  Average values of combined data set by activity and subject 
  * tBodyAcc.mean...Y          : num  ---""----
  * tBodyAcc.mean...Z          : num  ---""----
